@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    container_name: mysql
+    ports: 
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: laptopshop_datn
+      MYSQL_ROOT_PASSWORD: 1234
+    networks:
+      - my_network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "mysql"]
+      retries: 20
+      interval: 5s
+      timeout: 2s
+    volumes:
+      - ./mysqldb/laptopshop_datn.sql:/docker-entrypoint-initdb.d/laptopshop_datn.sql
+
+  backend:
+    build:
+      context: ./laptopshop_DATN/laptopshop
+      dockerfile: ./Dockerfile
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DB: laptopshop_datn
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./laptopshop_DATN/laptopshop/target:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - my_network
+
+  frontend:
+    build:
+      context: ./laptopshop_VueJS/laptopshop_vuejs
+      dockerfile: ./Dockerfile
+    # image: fontend/laptopshop
+    # command:
+    #   - /bin/sh
+    #   - -c
+    #   - while true; do sleep 2; done
+    ports:
+      - "80:80"
+    volumes:
+      - ./laptopshop_VueJS/laptopshop_vuejs:/app
+      - /app/node_modules/
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  db:
