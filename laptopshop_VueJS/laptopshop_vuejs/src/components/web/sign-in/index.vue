@@ -66,7 +66,7 @@ export default {
 			this.$router.push("/auth/sign-up")
 		},
 		google(){
-			window.location.href = 'http://34.203.11.156:8080/oauth2/authorization/google'
+			window.location.href = 'http://18.212.235.182:8080/oauth2/authorization/google'
 		},
 		async login(){
 			try{
