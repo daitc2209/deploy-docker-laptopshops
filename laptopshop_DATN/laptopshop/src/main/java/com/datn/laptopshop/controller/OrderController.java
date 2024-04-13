@@ -81,7 +81,7 @@ public class OrderController {
                 cartService.clearItem();
 
                 if (order.getTypePayment().equals("TRANSFER")){
-                    String redirectUrl = "http://18.212.235.182:8080/api/checkout/vnpay?codeOrder=" + orderDto.getCodeOrder() + "&bankCode=" + order.getBankCode();
+                    String redirectUrl = "http://3.90.184.192:8080/api/checkout/vnpay?codeOrder=" + orderDto.getCodeOrder() + "&bankCode=" + order.getBankCode();
 
                     m.put("redirectUrl", redirectUrl);
                     return ResponseHandler.responseBuilder("Message","post order Success",
